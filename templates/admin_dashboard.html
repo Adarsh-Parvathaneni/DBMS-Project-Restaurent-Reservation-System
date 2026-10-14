@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar"><div class="admin-label">WORKSPACE</div><a class="active" href="{{ url_for('admin_dashboard') }}">▦ <span>Overview</span></a><a href="{{ url_for('admin_reservations') }}">◷ <span>Reservations</span></a><a href="{{ url_for('admin_tables') }}">▤ <span>Tables</span></a><a href="{{ url_for('admin_customers') }}">♙ <span>Customers</span></a><a href="{{ url_for('admin_reports') }}">↗ <span>Reports</span></a><div class="sidebar-bottom"><div class="mini-avatar">TT</div><span><strong>Restaurant Admin</strong><small>Administrator</small></span></div></aside>
+  <div class="admin-main">
+    <div class="admin-page-head"><div><div class="eyebrow">YOUR RESTAURANT, AT A GLANCE</div><h1>Good morning.</h1><p>Here's what's happening at your table today.</p></div><a class="btn primary" href="{{ url_for('admin_reservations') }}">Manage reservations ↗</a></div>
+    <div class="stats-row admin-stats">
+      <div class="stat-card"><span class="stat-label">ACTIVE BOOKINGS</span><strong>{{ total }}</strong><span class="stat-foot"><i class="stat-dot green"></i> Confirmed & pending</span></div>
+      <div class="stat-card"><span class="stat-label">TODAY'S BOOKINGS</span><strong>{{ today_count }}</strong><span class="stat-foot">Across all time slots</span></div>
+      <div class="stat-card"><span class="stat-label">CUSTOMERS</span><strong>{{ customers }}</strong><span class="stat-foot">Registered guests</span></div>
+      <div class="stat-card"><span class="stat-label">ACTIVE TABLES</span><strong>{{ active_tables }}</strong><span class="stat-foot">Ready to reserve</span></div>
+    </div>
+    <div class="admin-grid">
+      <section class="panel wide-panel"><div class="panel-head"><div><h2>Today's reservations</h2><p>All bookings scheduled for today</p></div><a href="{{ url_for('admin_reservations', date=today) }}">View all ↗</a></div>
+        {% if today_bookings %}<div class="table-shell"><table><thead><tr><th>GUEST</th><th>TIME</th><th>TABLE</th><th>PARTY</th><th>STATUS</th></tr></thead><tbody>{% for r in today_bookings %}<tr><td><strong>{{ r.customer_name }}</strong><small class="cell-sub">{{ r.reference }}</small></td><td>{{ r.start_time }}</td><td>{{ r.table_number }}</td><td>{{ r.guests }}</td><td><span class="status {{ r.status|lower }}">{{ r.status }}</span></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-inline"><span>◷</span><div><strong>No reservations for today yet</strong><p>Your upcoming bookings will show here.</p></div></div>{% endif %}
+      </section>
+      <section class="panel occupancy-panel"><div class="panel-head"><div><h2>Today's pulse</h2><p>Quick operational snapshot</p></div></div><div class="occupancy-ring" style="--occupancy: {{ occupancy }}%"><div><strong>{{ occupancy }}%</strong><span>BOOKING LOAD</span></div></div><div class="occupancy-legend"><span><i></i> Today's bookings <strong>{{ today_count }}</strong></span><span><i></i> Active tables <strong>{{ active_tables }}</strong></span></div><a class="text-link" href="{{ url_for('admin_reports') }}">Explore reports ↗</a></section>
+      <section class="panel upcoming-panel"><div class="panel-head"><div><h2>Coming up</h2><p>Next reservations on the books</p></div><a href="{{ url_for('admin_reservations') }}">All bookings ↗</a></div>
+        {% for r in upcoming %}<div class="upcoming-item"><div class="upcoming-date"><strong>{{ r.reservation_date[8:10] }}</strong><small>{{ r.reservation_date[5:7] }}/{{ r.reservation_date[0:4] }}</small></div><div><strong>{{ r.customer_name }}</strong><small>{{ r.start_time }} · {{ r.guests }} guests · {{ r.table_number }}</small></div><span class="status {{ r.status|lower }}">{{ r.status }}</span></div>{% else %}<p class="muted pad">No upcoming reservations.</p>{% endfor %}
+      </section>
+      <section class="panel quick-panel"><div class="panel-head"><div><h2>Quick actions</h2><p>Keep service running smoothly</p></div></div><a class="quick-action" href="{{ url_for('admin_reservations') }}"><span>◷</span><div><strong>Manage reservations</strong><small>Search, filter and update bookings</small></div><b>↗</b></a><a class="quick-action" href="{{ url_for('admin_tables') }}"><span>▤</span><div><strong>Manage tables</strong><small>Capacity and availability</small></div><b>↗</b></a><a class="quick-action" href="{{ url_for('admin_customers') }}"><span>♙</span><div><strong>Customer directory</strong><small>Guests and loyalty points</small></div><b>↗</b></a></section>
+    </div>
+  </div>
+</section>
+{% endblock %}

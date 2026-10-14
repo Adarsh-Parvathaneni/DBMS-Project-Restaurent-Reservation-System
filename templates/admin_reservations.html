@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Manage reservations{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar"><div class="admin-label">WORKSPACE</div><a href="{{ url_for('admin_dashboard') }}">▦ <span>Overview</span></a><a class="active" href="{{ url_for('admin_reservations') }}">◷ <span>Reservations</span></a><a href="{{ url_for('admin_tables') }}">▤ <span>Tables</span></a><a href="{{ url_for('admin_customers') }}">♙ <span>Customers</span></a><a href="{{ url_for('admin_reports') }}">↗ <span>Reports</span></a><div class="sidebar-bottom"><div class="mini-avatar">TT</div><span><strong>Restaurant Admin</strong><small>Administrator</small></span></div></aside>
+  <div class="admin-main">
+    <div class="admin-page-head"><div><div class="eyebrow">BOOKING OPERATIONS</div><h1>Reservations</h1><p>Search, review and update every booking.</p></div></div>
+    <form class="filter-bar" method="get"><input name="q" value="{{ q }}" placeholder="Search name, phone or reference…"><input type="date" name="date" value="{{ date_filter }}"><select name="status"><option value="">All statuses</option>{% for s in ['CONFIRMED','PENDING','CANCELLED','COMPLETED','NO_SHOW'] %}<option {{ 'selected' if status==s else '' }}>{{ s }}</option>{% endfor %}</select><button class="btn primary small">Apply filters</button><a class="btn ghost small" href="{{ url_for('admin_reservations') }}">Reset</a></form>
+    <section class="panel">
+      <div class="panel-head"><div><h2>All reservations</h2><p>{{ reservations|length }} result(s)</p></div></div>
+      <div class="table-shell"><table><thead><tr><th>REFERENCE / GUEST</th><th>DATE & TIME</th><th>TABLE</th><th>GUESTS</th><th>STATUS</th><th>UPDATE</th></tr></thead><tbody>
+      {% for r in reservations %}<tr><td><strong>{{ r.reference }}</strong><small class="cell-sub">{{ r.customer_name }} · {{ r.phone }}</small></td><td>{{ r.reservation_date }}<small class="cell-sub">{{ r.start_time }}–{{ r.end_time }}</small></td><td>{{ r.table_number }}</td><td>{{ r.guests }}</td><td><span class="status {{ r.status|lower }}">{{ r.status }}</span></td><td><form method="post" action="{{ url_for('admin_update_status', rid=r.id) }}" class="inline-update"><select name="status">{% for s in ['PENDING','CONFIRMED','CANCELLED','COMPLETED','NO_SHOW'] %}<option {{ 'selected' if r.status==s else '' }}>{{ s }}</option>{% endfor %}</select><button class="mini-submit" title="Save status">✓</button></form></td></tr>
+      {% else %}<tr><td colspan="6" class="empty-cell">No reservations match those filters.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Reservation {{ reservation.reference }}{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="eyebrow">YOUR RESERVATION</div><h1>It's all <em>arranged.</em></h1><p>Keep this reference handy if you need to look up your booking.</p></section>
+<section class="detail-wrap">
+  <div class="confirmation-card">
+    <div class="confirm-check">✓</div><div class="eyebrow">BOOKING REFERENCE</div><div class="reference-code">{{ reservation.reference }}</div><span class="status {{ reservation.status|lower }}">{{ reservation.status }}</span>
+    <div class="detail-divider"></div>
+    <div class="detail-grid">
+      <div><span>DATE</span><strong>{{ reservation.reservation_date }}</strong></div>
+      <div><span>TIME</span><strong>{{ reservation.start_time }} – {{ reservation.end_time }}</strong></div>
+      <div><span>GUESTS</span><strong>{{ reservation.guests }}</strong></div>
+      <div><span>TABLE</span><strong>{{ reservation.table_number }} · {{ reservation.area }}</strong></div>
+      <div><span>NAME</span><strong>{{ reservation.name }}</strong></div>
+      <div><span>CONTACT</span><strong>{{ reservation.phone }}</strong></div>
+    </div>
+    {% if reservation.occasion %}<div class="detail-note"><span>OCCASION</span>{{ reservation.occasion }}</div>{% endif %}
+    {% if reservation.notes %}<div class="detail-note"><span>YOUR NOTE</span>{{ reservation.notes }}</div>{% endif %}
+    <div class="detail-actions"><a class="btn primary" href="{{ url_for('my_reservations') }}">My bookings</a>{% if reservation.status in ['PENDING','CONFIRMED'] %}<form method="post" action="{{ url_for('cancel_reservation', reference=reservation.reference) }}" data-confirm="Cancel this reservation?"><button class="btn danger-outline" type="submit">Cancel reservation</button></form>{% endif %}</div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}My bookings{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="eyebrow">YOUR TIME AT THE TABLE</div><h1>My <em>bookings.</em></h1><p>Every good plan, all in one place.</p></section>
+<section class="content-width">
+  <div class="stats-row customer-stats">
+    <div class="stat-card"><span class="stat-label">LOYALTY POINTS</span><strong>{{ loyalty.points if loyalty else 0 }}</strong><span class="stat-foot">Ready to redeem</span></div>
+    <div class="stat-card"><span class="stat-label">TOTAL BOOKINGS</span><strong>{{ reservations|length }}</strong><span class="stat-foot">Your dining history</span></div>
+    <div class="stat-card stat-action"><span class="stat-label">NEXT GOOD MEMORY</span><strong>Book a table</strong><a href="{{ url_for('book') }}">Choose your time ↗</a></div>
+  </div>
+  <div class="content-head"><div><div class="eyebrow">BOOKING HISTORY</div><h2>Your reservations</h2></div><a class="btn primary small" href="{{ url_for('book') }}">+ New reservation</a></div>
+  {% if reservations %}
+  <div class="reservation-list">
+    {% for r in reservations %}
+    <article class="reservation-card">
+      <div class="reservation-date"><strong>{{ r.reservation_date[8:10] }}</strong><span>{{ r.reservation_date[5:7] }}/{{ r.reservation_date[0:4] }}</span></div>
+      <div class="reservation-main"><div class="reservation-title-row"><h3>{{ r.occasion or 'Dining reservation' }}</h3><span class="status {{ r.status|lower }}">{{ r.status }}</span></div><p>{{ r.start_time }} – {{ r.end_time }} <span>·</span> {{ r.guests }} {{ 'guest' if r.guests == 1 else 'guests' }} <span>·</span> Table {{ r.table_number }}</p><small>REF {{ r.reference }}</small></div>
+      <a class="arrow-link" href="{{ url_for('reservation_detail', reference=r.reference) }}">View <span>↗</span></a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">◷</div><h3>Your next visit starts here.</h3><p>You don't have any reservations yet.</p><a class="btn primary" href="{{ url_for('book') }}">Reserve a table ↗</a></div>
+  {% endif %}
+</section>
+{% endblock %}

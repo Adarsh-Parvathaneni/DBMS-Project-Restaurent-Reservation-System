@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Reports & analytics{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar"><div class="admin-label">WORKSPACE</div><a href="{{ url_for('admin_dashboard') }}">▦ <span>Overview</span></a><a href="{{ url_for('admin_reservations') }}">◷ <span>Reservations</span></a><a href="{{ url_for('admin_tables') }}">▤ <span>Tables</span></a><a href="{{ url_for('admin_customers') }}">♙ <span>Customers</span></a><a class="active" href="{{ url_for('admin_reports') }}">↗ <span>Reports</span></a><div class="sidebar-bottom"><div class="mini-avatar">TT</div><span><strong>Restaurant Admin</strong><small>Administrator</small></span></div></aside>
+  <div class="admin-main">
+    <div class="admin-page-head"><div><div class="eyebrow">THE NUMBERS BEHIND THE EXPERIENCE</div><h1>Reports & analytics</h1><p>Simple operational insights, queried from the live database.</p></div></div>
+    <div class="admin-grid reports-grid">
+      <section class="panel wide-panel"><div class="panel-head"><div><h2>Bookings over the last 14 days</h2><p>Reservations grouped by reservation date</p></div></div><div class="bar-chart">{% for d in by_day %}<div class="bar-col"><span class="bar-value">{{ d.bookings }}</span><div class="bar-track"><i style="height:{{ (d.bookings * 100 / ([by_day|map(attribute='bookings')|max,1]|max))|round }}%"></i></div><small>{{ d.reservation_date[5:] }}</small></div>{% else %}<p class="muted">No booking data yet.</p>{% endfor %}</div></section>
+      <section class="panel"><div class="panel-head"><div><h2>Popular time slots</h2><p>Upcoming confirmed bookings</p></div></div>{% for s in by_slot %}<div class="rank-row"><span class="rank-time">{{ s.start_time }}</span><div class="rank-track"><i style="width:{{ (s.bookings * 100 / ([by_slot|map(attribute='bookings')|max,1]|max))|round }}%"></i></div><strong>{{ s.bookings }}</strong></div>{% else %}<p class="muted">No upcoming bookings.</p>{% endfor %}</section>
+      <section class="panel"><div class="panel-head"><div><h2>Reservation status</h2><p>All recorded reservations</p></div></div>{% for s in status_counts %}<div class="status-row"><span class="status {{ s.status|lower }}">{{ s.status }}</span><strong>{{ s.total }}</strong></div>{% else %}<p class="muted">No reservations yet.</p>{% endfor %}</section>
+      <section class="panel"><div class="panel-head"><div><h2>Frequent guests</h2><p>Ranked by total reservations</p></div></div>{% for c in top_customers %}<div class="guest-rank"><span class="rank-avatar">{{ c.name[:1]|upper }}</span><span><strong>{{ c.name }}</strong><small>Reservations</small></span><b>{{ c.total }}</b></div>{% else %}<p class="muted">No guest activity yet.</p>{% endfor %}</section>
+    </div>
+  </div>
+</section>
+{% endblock %}

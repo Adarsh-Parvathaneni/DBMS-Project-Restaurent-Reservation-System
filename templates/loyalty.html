@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Loyalty rewards{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="eyebrow">GOOD THINGS COME AROUND</div><h1>A little <em>something back.</em></h1><p>Every reservation brings you closer to your next treat.</p></section>
+<section class="content-width">
+  <div class="loyalty-hero">
+    <div><div class="eyebrow light">YOUR TABLE & THYME REWARDS</div><h2>{{ account.points if account else 0 }} <span>points</span></h2><p>You've earned {{ account.lifetime_points if account else 0 }} points in total.</p></div>
+    <div class="tier-badge"><span>✳</span><small>YOUR TIER</small><strong>{{ tier }}</strong><div class="tier-track"><i style="width:{{ 35 if tier=='Bronze' else (70 if tier=='Silver' else 100) }}%"></i></div><small>{% if tier == 'Bronze' %}{{ 250-(account.points if account else 0) }} points to Silver{% elif tier == 'Silver' %}{{ 600-(account.points if account else 0) }} points to Gold{% else %}Top tier unlocked{% endif %}</small></div>
+  </div>
+  <div class="content-head"><div><div class="eyebrow">MADE FOR YOU</div><h2>Rewards to enjoy</h2></div><span class="muted">Redeem your points for a treat.</span></div>
+  <div class="reward-grid">
+    {% for reward in rewards %}
+    <article class="reward-card"><div class="reward-art">{{ '✧' if loop.index == 1 else ('◈' if loop.index == 2 else '✳') }}</div><div class="reward-cost">{{ reward.points_cost }} PTS</div><h3>{{ reward.name }}</h3><p>{{ reward.description }}</p><form method="post" action="{{ url_for('redeem_reward', reward_id=reward.id) }}" data-confirm="Redeem {{ reward.name }} for {{ reward.points_cost }} points?"><button class="btn {{ 'primary' if account and account.points >= reward.points_cost else 'disabled' }} full" type="submit" {{ 'disabled' if not account or account.points < reward.points_cost else '' }}>Redeem reward</button></form></article>
+    {% endfor %}
+  </div>
+  <div class="content-head"><div><div class="eyebrow">YOUR ACTIVITY</div><h2>Points history</h2></div></div>
+  <div class="table-shell"><table><thead><tr><th>ACTIVITY</th><th>DATE</th><th>POINTS</th></tr></thead><tbody>{% for t in transactions %}<tr><td>{{ t.reason }}</td><td>{{ t.created_at }}</td><td class="{{ 'positive' if t.points_change > 0 else 'negative' }}">{{ '+' if t.points_change > 0 else '' }}{{ t.points_change }}</td></tr>{% else %}<tr><td colspan="3" class="empty-cell">Your points activity will appear here.</td></tr>{% endfor %}</tbody></table></div>
+  {% if redemptions %}<div class="content-head"><div><div class="eyebrow">YOUR REWARDS</div><h2>Redemption codes</h2></div></div><div class="redemption-list">{% for r in redemptions %}<div><span><strong>{{ r.reward_name }}</strong><small>{{ r.created_at }}</small></span><code>{{ r.redemption_code }}</code></div>{% endfor %}</div>{% endif %}
+</section>
+{% endblock %}

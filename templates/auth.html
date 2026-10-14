@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Create an account' if mode == 'register' else 'Sign in' }}{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><div class="eyebrow light">WELCOME TO THE TABLE</div><h1>{{ 'A seat with your name on it.' if mode == 'register' else 'Good to have you back.' }}</h1><p>{{ 'Create an account to reserve tables, keep track of bookings, and earn rewards.' if mode == 'register' else 'Sign in to manage your reservations and make your next visit count.' }}</p><div class="auth-quote">“The best memories are made around a table.”</div></div>
+  <div class="auth-form-wrap">
+    <div class="form-kicker">{{ 'GET STARTED' if mode == 'register' else 'YOUR ACCOUNT' }}</div>
+    <h2>{{ 'Create your account' if mode == 'register' else 'Sign in' }}</h2>
+    <p class="muted">{{ 'It only takes a minute.' if mode == 'register' else 'Enter your details below to continue.' }}</p>
+    <form method="post" class="form-stack">
+      {% if mode == 'register' %}
+        <label>Full name<input name="name" required autocomplete="name" placeholder="Your name"></label>
+        <label>Email address<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+        <label>Phone number<input name="phone" required autocomplete="tel" placeholder="10-digit phone number"></label>
+        <label>Password<input name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters"></label>
+      {% else %}
+        <label>Email address<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+        <label>Password<input name="password" type="password" required autocomplete="current-password" placeholder="Your password"></label>
+      {% endif %}
+      <button class="btn primary full" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }} <span>↗</span></button>
+    </form>
+    {% if mode == 'register' %}<p class="form-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>{% else %}<p class="form-switch">New around here? <a href="{{ url_for('register') }}">Create an account</a></p>{% endif %}
+    <div class="demo-hint"><strong>Demo access</strong><span>Admin: admin@tableandthyme.local / Admin@123</span><span>Customer: ad.demo@example.com / Customer@123</span></div>
+  </div>
+</section>
+{% endblock %}

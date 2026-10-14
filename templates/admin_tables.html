@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Table management{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar"><div class="admin-label">WORKSPACE</div><a href="{{ url_for('admin_dashboard') }}">▦ <span>Overview</span></a><a href="{{ url_for('admin_reservations') }}">◷ <span>Reservations</span></a><a class="active" href="{{ url_for('admin_tables') }}">▤ <span>Tables</span></a><a href="{{ url_for('admin_customers') }}">♙ <span>Customers</span></a><a href="{{ url_for('admin_reports') }}">↗ <span>Reports</span></a><div class="sidebar-bottom"><div class="mini-avatar">TT</div><span><strong>Restaurant Admin</strong><small>Administrator</small></span></div></aside>
+  <div class="admin-main">
+    <div class="admin-page-head"><div><div class="eyebrow">DINING ROOM SETUP</div><h1>Table management</h1><p>Set capacity, area and whether a table can be booked.</p></div></div>
+    <div class="admin-grid table-admin-grid">
+      <section class="panel"><div class="panel-head"><div><h2>Add a table</h2><p>New tables become available immediately.</p></div></div><form method="post" class="form-stack panel-form"><label>Table number<input name="table_number" required placeholder="e.g. T09"></label><div class="form-row"><label>Capacity<select name="capacity">{% for n in range(1,21) %}<option value="{{ n }}" {{ 'selected' if n==4 else '' }}>{{ n }} guests</option>{% endfor %}</select></label><label>Area<select name="area"><option>Main Dining</option><option>Window</option><option>Garden</option><option>Private Dining</option><option>Patio</option></select></label></div><button class="btn primary full">Add table ↗</button></form></section>
+      <section class="panel"><div class="panel-head"><div><h2>Floor overview</h2><p>{{ tables|length }} tables configured</p></div></div><div class="table-tile-grid">{% for t in tables %}<div class="table-tile {{ 'inactive' if not t.is_active else '' }}"><div class="tile-top"><span>{{ t.table_number }}</span><span class="tile-status">{{ 'ACTIVE' if t.is_active else 'INACTIVE' }}</span></div><div class="tile-capacity">{{ t.capacity }}<small> seats</small></div><p>{{ t.area }}</p><small>{{ t.upcoming_count }} upcoming booking(s)</small><form method="post" action="{{ url_for('toggle_table', tid=t.id) }}"><button class="text-button">{{ 'Deactivate' if t.is_active else 'Activate' }}</button></form></div>{% endfor %}</div></section>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Reserve a table{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="eyebrow">MAKE IT A MOMENT</div><h1>Reserve your <em>table.</em></h1><p>Tell us when you’re coming. We’ll find the right spot.</p></section>
+<section class="booking-layout">
+  <div class="booking-form-card">
+    <div class="form-card-head"><span class="step-pill">01</span><div><h2>Your reservation</h2><p>Reservations last 90 minutes.</p></div></div>
+    <form method="post" class="form-stack" id="booking-form">
+      <div class="form-row">
+        <label>Date<input type="date" name="reservation_date" min="{{ min_date }}" value="{{ min_date }}" required id="booking-date"></label>
+        <label>Guests<select name="guests" id="booking-guests">{% for n in range(1,9) %}<option value="{{ n }}" {{ 'selected' if n == 2 else '' }}>{{ n }} {{ 'guest' if n == 1 else 'guests' }}</option>{% endfor %}</select></label>
+      </div>
+      <label>Available time<select name="start_time" id="booking-time" required>{% for slot in slots %}<option value="{{ slot }}">{{ slot }}</option>{% endfor %}</select></label>
+      <div class="availability-box" id="availability-box"><span class="availability-dot"></span><span>Choose your date and time to check table availability.</span></div>
+      <label>Occasion <span class="optional">OPTIONAL</span><select name="occasion"><option value="">Just because</option><option>Birthday</option><option>Anniversary</option><option>Business meal</option><option>Family gathering</option><option>Other celebration</option></select></label>
+      <label>Anything we should know? <span class="optional">OPTIONAL</span><textarea name="notes" rows="3" maxlength="500" placeholder="Dietary requests, accessibility needs, or a special note…"></textarea></label>
+      <button class="btn primary full" type="submit">Confirm reservation <span>↗</span></button>
+      <p class="fine-print">Submitting confirms your booking. Please cancel if your plans change.</p>
+    </form>
+  </div>
+  <aside class="booking-side">
+    <div class="side-card olive"><span class="side-icon">✳</span><div class="eyebrow light">A LITTLE THANK YOU</div><h3>Every visit<br>comes with a perk.</h3><p>Earn 25 loyalty points when you make a reservation. Save them for something delicious.</p><a href="{{ url_for('loyalty') }}">Explore rewards ↗</a></div>
+    <div class="side-card"><div class="eyebrow">GOOD TO KNOW</div><ul class="info-list"><li><span>◷</span><div><strong>Dining duration</strong><small>90 minutes per reservation</small></div></li><li><span>♧</span><div><strong>Party size</strong><small>1–8 guests per booking</small></div></li><li><span>♡</span><div><strong>Plans changed?</strong><small>You can cancel from My bookings.</small></div></li></ul></div>
+  </aside>
+</section>
+<script>window.bookingSlots = {{ slots|tojson }};</script>
+{% endblock %}

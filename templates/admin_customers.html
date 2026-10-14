@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-sidebar"><div class="admin-label">WORKSPACE</div><a href="{{ url_for('admin_dashboard') }}">▦ <span>Overview</span></a><a href="{{ url_for('admin_reservations') }}">◷ <span>Reservations</span></a><a href="{{ url_for('admin_tables') }}">▤ <span>Tables</span></a><a class="active" href="{{ url_for('admin_customers') }}">♙ <span>Customers</span></a><a href="{{ url_for('admin_reports') }}">↗ <span>Reports</span></a><div class="sidebar-bottom"><div class="mini-avatar">TT</div><span><strong>Restaurant Admin</strong><small>Administrator</small></span></div></aside>
+  <div class="admin-main">
+    <div class="admin-page-head"><div><div class="eyebrow">PEOPLE MAKE THE PLACE</div><h1>Customers</h1><p>Your guest directory and loyalty overview.</p></div></div>
+    <section class="panel"><div class="panel-head"><div><h2>Registered guests</h2><p>{{ customers|length }} customer account(s)</p></div></div><div class="table-shell"><table><thead><tr><th>CUSTOMER</th><th>CONTACT</th><th>JOINED</th><th>RESERVATIONS</th><th>LOYALTY POINTS</th></tr></thead><tbody>{% for c in customers %}<tr><td><strong>{{ c.name }}</strong><small class="cell-sub">ID #{{ c.id }}</small></td><td>{{ c.email }}<small class="cell-sub">{{ c.phone }}</small></td><td>{{ c.created_at[:10] }}</td><td>{{ c.reservation_count }}</td><td><span class="points-pill">✳ {{ c.points }}</span></td></tr>{% else %}<tr><td colspan="5" class="empty-cell">No customers registered yet.</td></tr>{% endfor %}</tbody></table></div></section>
+  </div>
+</section>
+{% endblock %}
